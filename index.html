@@ -1,49 +1,187 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+	<title>reveal.js</title>
 
-		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/zenburn.css">
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/night.css">
 
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
-			</div>
+	<!-- Theme used for syntax highlighting of code -->
+	<link rel="stylesheet" href="lib/css/zenburn.css">
+
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+		document.getElementsByTagName('head')[0].appendChild(link);
+	</script>
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+			<section>
+				<h2>
+					Overview
+				</h2>
+				<p>
+					<u>Microservices</u> is a term used to describe two things:</p>
+				<p class="fragment">One, cloud servers which provide access to a single resource in a distributed computational system.</p>
+				<p class="fragment">Two, an overall trend of computing moving away from large, monolithic codebases towards smaller, reusable components.</p>
+			</section>
+			<section>
+				<h2>
+					Not talking about
+				</h2>
+				<p class="fragment">Specific platforms and frameworks.</p>
+				<p class="fragment">Distributed computing. Not modular approaches in a single system. eg. Linux. </p>
+				<p class="fragment">Containers (Docker, Vagrant) are generally used in production environments, not discussing. </p>
+			</section>
+			<section>
+				<h2>
+					About Me
+				</h2>
+				<p class="fragment">
+					Prior life as a Software Architect and Developer Lead at Admobilize, a Computer Vision and Hardware Company.
+					<br> Now Product Lead at same.
+				</p>
+				<p class="fragment">
+					@eighteyes on PDX Slack
+					<br> eighteyes@gmail.com
+					<br> http://github.com/eighteyes/Microservices072018
+					<br> @seancanton on Twitter
+				</p>
+			</section>
+			<section>
+				<h2>
+					Simple Microservice
+				</h2>
+				<p class="fragment">Problem: My application can't search Twitter via a client side GET. They want me to use an API.</p>
+				<p class="fragment">Solution 1: Building an external API integration into the application, manage authentication, and handle API keys in
+					the same codebase.
+					<p class="fragment">Solution 2: Microservice. 10 lines of server logic to search Twitter via a proxied GET call and forward the results.</p>
+					<p class="fragment">Authentication is isolated, bad calls won't reach microservice, API keys are provided by the container at run time.</p>
+			</section>
+			<section>
+				<h2>
+					Complex Microservice
+				</h2>
+				<p class="fragment">Problem: Client needs to compose results from Multiple Databases. User info is in Mongo, their transactional data is
+					in SQL and the recommendation engine uses Neo4j.</p>
+				<p class="fragment">Putting all this business logic into a single codebase is possible, but not easy to maintain or reason about. Long, intensive
+					processes will lead to memory bottlenecks and server downtime.</p>
+				<p class="fragment">Solution: Several Microservices, one for each database, connected via a Event-style messaging system to compose requests
+					and return results.</p>
+				</section>
+						<section>
+							<img src="service.png">
+						</section>
+		
+
+			<section>
+				<h2>
+					Transactional VS Streaming
+				</h2>
+
+				<p class="fragment">REST / RPC - Send, Wait for Response</p>
+				<p class="fragment">Two directional. External API, Database Access. Ordered Operations.</p>
+				<p class="fragment">RabbitMQ, ZeroMQ, Redis - Pubsub, Message Queue</p>
+				<p class="fragment">One directional. Data Transformations and Processing. Ordered queues for workers. Distributed data ingestion. Operations
+					in Parallel.</p>
+				<p class="fragment">Microservices can be either, and a comprehensive system will incorporate both types.</p>
+			</section>
+
+			<section>
+				<h2>
+					Approaches to Software
+				</h2>
+
+				<p class="fragment">Sequential - Machine Code, BASIC, GOTO</p>
+				<p class="fragment">Procedural - Functions, Headers, Abstraction</p>
+				<p class="fragment">Abstraction - Classes, OOP, Encapsulation</p>
+				<p class="fragment">Functional - LISP, Clojure, Composing, Immutability</p>
+				<p class="fragment">Microservices are generally a variant of the Interface Pattern, used to provide access to an underlying service without
+					exposing underlying logic which permits decoupling.</p>
+			</section>
+			<section>
+				<h2>
+					Maintenance
+				</h2>
+
+				<p class="fragment">Coupling is a measure of how vulnerable to change the connection between two software entities are. A "loosely coupled" connection
+					maintains only the bare minimum of connection required to function, and thus, requires less cognitive effort to maintain.
+				</p>
+				<p class="fragment">Traditionally, OOP classes incur a wide range of coupling costs, which usually increase as changes are made to the system.</p>
+				<p class="fragment">Microservices encourages better software architecture, the edge between services forces a simple interface which can
+					be easily documented and built upon.</p>
+			</section>
+			<section>
+				<h2>
+					Scalability
+				</h2>
+
+				<p class="fragment">Consider a typical CRUD Over REST. Create Read Update Delete</p>
+				<p class="fragment">In almost every application, Read will be used 99% of the time. Heavy use incurs a performance cost to clients who Create
+					and Update.</p>
+				<p class="fragment">A Microservice approach would make an stand-alone Read service and scale that indepedently of the other, less requested
+					database operations.</p>
+			</section>
+
+			<section>
+				<h2>
+					Important Considerations
+				</h2>
+				<p class="fragment">
+					Logging - Lots of servers means it's more difficult to debug without intentional visibility.
+				</p>
+				<p class="fragment">
+					Edge Documentation - For developers to be functional in a microservices architecture, function, context, inputs and outputs must be clearly defined.
+				</p>
+				<p class="fragment">
+					Choice of Tools / Cloud Provider - Flexibility in choosing the right tool for the task. Not for cloud beginners. 
+				</p>
+				<p class="fragment">
+					Tests - Without automated testing, your microservices will fail and burn.
+				</p>
+				<p class="fragment">
+					Local Development - Using containers, a developer should be able to reproduce the environment locally.
+				</p>
+				<p class="fragment">
+					Health Check - At a minimum, microservices should include a health check endpoint for monitoring. Each cloud service has it's own approach.
+				</p>
+			</section>
+			<section>That's it!
+
+				<p> Thanks for listening. </p>
+			</section>
 		</div>
+	</div>
 
-		<script src="lib/js/head.min.js"></script>
-		<script src="js/reveal.js"></script>
+	<script src="lib/js/head.min.js"></script>
+	<script src="js/reveal.js"></script>
 
-		<script>
-			// More info about config & dependencies:
-			// - https://github.com/hakimel/reveal.js#configuration
-			// - https://github.com/hakimel/reveal.js#dependencies
-			Reveal.initialize({
-				dependencies: [
-					{ src: 'plugin/markdown/marked.js' },
-					{ src: 'plugin/markdown/markdown.js' },
-					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
-				]
-			});
-		</script>
-	</body>
+	<script>
+		// More info about config & dependencies:
+		// - https://github.com/hakimel/reveal.js#configuration
+		// - https://github.com/hakimel/reveal.js#dependencies
+		Reveal.initialize({
+			controls: false,
+			autoSlide: 0,
+			width: "90%",
+			dependencies: [
+				{ src: 'plugin/markdown/marked.js' },
+				{ src: 'plugin/markdown/markdown.js' },
+				{ src: 'plugin/notes/notes.js', async: true },
+				{ src: 'plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } }
+			]
+		});
+	</script>
+</body>
+
 </html>

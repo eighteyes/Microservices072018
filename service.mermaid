@@ -1,0 +1,11 @@
+
+graph LR
+Client-->Request
+Request-->G(Gateway)
+G-->M(Mongo Service)
+G-->N(Neo4j Service)
+G-->S(SQL Service)
+M-->E(EventLoop)
+N-->E
+S-->E
+E--Channel Established before Request Sent-->Client
